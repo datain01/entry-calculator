@@ -13620,7 +13620,7 @@
   {
     "id": 479,
     "formId": "0479-01",
-    "name": "로토무 (heat)",
+    "name": "히트 로토무",
     "isDefault": false,
     "types": [
       "전기",
@@ -13641,7 +13641,7 @@
   {
     "id": 479,
     "formId": "0479-02",
-    "name": "로토무 (wash)",
+    "name": "워시 로토무",
     "isDefault": false,
     "types": [
       "전기",
@@ -13662,7 +13662,7 @@
   {
     "id": 479,
     "formId": "0479-03",
-    "name": "로토무 (frost)",
+    "name": "프로스트 로토무",
     "isDefault": false,
     "types": [
       "전기",
@@ -13683,7 +13683,7 @@
   {
     "id": 479,
     "formId": "0479-04",
-    "name": "로토무 (fan)",
+    "name": "스핀 로토무",
     "isDefault": false,
     "types": [
       "전기",
@@ -13704,7 +13704,7 @@
   {
     "id": 479,
     "formId": "0479-05",
-    "name": "로토무 (mow)",
+    "name": "커트 로토무",
     "isDefault": false,
     "types": [
       "전기",
