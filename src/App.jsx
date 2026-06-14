@@ -386,16 +386,19 @@ function App() {
 
   const renderStats = (stats) => {
     if (!stats) return null;
+    // 어느 쪽 종족값이 더 높은지 비교 조건문
     const isPhysicalAtk = stats.attack >= stats.spAtk;
     const isPhysicalDef = stats.defense >= stats.spDef;
 
     return (
       <div style={{ fontSize: '11px', color: '#475569', marginBottom: '2px', display: 'flex', gap: '5px', flexWrap: 'nowrap', whiteSpace: 'nowrap' }}>
         <span>H: {stats.hp}</span> | 
-        <span style={{ color: '#ef4444', fontWeight: isPhysicalAtk ? 'bold' : 'normal' }}>A: {stats.attack}</span> | 
-        <span style={{ color: '#ec4899', fontWeight: !isPhysicalAtk ? 'bold' : 'normal' }}>C: {stats.spAtk}</span> | 
-        <span style={{ color: '#3b82f6', fontWeight: isPhysicalDef ? 'bold' : 'normal' }}>B: {stats.defense}</span> | 
-        <span style={{ color: '#06b6d4', fontWeight: !isPhysicalDef ? 'bold' : 'normal' }}>D: {stats.spDef}</span> | 
+        {/* 공격/특공 중 높은 쪽에만 빨간색(#ef4444)과 볼드 적용 */}
+        <span style={{ color: isPhysicalAtk ? '#ef4444' : '#475569', fontWeight: isPhysicalAtk ? 'bold' : 'normal' }}>A: {stats.attack}</span> | 
+        <span style={{ color: !isPhysicalAtk ? '#ef4444' : '#475569', fontWeight: !isPhysicalAtk ? 'bold' : 'normal' }}>C: {stats.spAtk}</span> | 
+        {/* 방어/특방 중 높은 쪽에만 파란색(#2563eb)과 볼드 적용 */}
+        <span style={{ color: isPhysicalDef ? '#2563eb' : '#475569', fontWeight: isPhysicalDef ? 'bold' : 'normal' }}>B: {stats.defense}</span> | 
+        <span style={{ color: !isPhysicalDef ? '#2563eb' : '#475569', fontWeight: !isPhysicalDef ? 'bold' : 'normal' }}>D: {stats.spDef}</span> | 
         <span>S: {stats.speed}</span>
       </div>
     );
