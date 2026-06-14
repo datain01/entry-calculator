@@ -237,10 +237,10 @@ function App() {
   };
 
   const filteredMyList = searchMy 
-    ? pokemonData.filter(p => p.name.toLowerCase().includes(searchMy.toLowerCase())).slice(0, 5) 
+    ? pokemonData.filter(p => p.name.toLowerCase().replace(/\s+/g, '').includes(searchMy.toLowerCase().replace(/\s+/g, ''))).slice(0, 5) 
     : [];
   const filteredVsList = searchVs 
-    ? pokemonData.filter(p => p.name.toLowerCase().includes(searchVs.toLowerCase())).slice(0, 5) 
+    ? pokemonData.filter(p => p.name.toLowerCase().replace(/\s+/g, '').includes(searchVs.toLowerCase().replace(/\s+/g, ''))).slice(0, 5) 
     : [];
 
   const addToMyEntry = (pokemon) => {
