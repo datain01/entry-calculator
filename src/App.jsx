@@ -208,6 +208,15 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
+  // 💡 [추정 데이터 기반 동적 수정] 실시간 창 너비를 추적하는 시스템 반영
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const [searchMy, setSearchMy] = useState('');
   const [searchVs, setSearchVs] = useState('');
   const [focusedMyIndex, setFocusedMyIndex] = useState(-1);
@@ -408,7 +417,6 @@ function App() {
   };
 
   return (
-    /* 💡 [수정] 최상위 컨테이너: overflowY를 visible로 열어 제한 없는 브라우저 스크롤 작동 보장 */
     <div style={{ padding: '10px 20px', fontFamily: 'sans-serif', minHeight: '100vh', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', maxWidth: '100%', width: '100%', overflowY: 'visible' }}>
       
       {/* 상단 헤더 영역 */}
@@ -473,7 +481,6 @@ function App() {
             <div style={{ fontWeight: 'bold', borderBottom: '1px solid #e2e8f0', paddingBottom: '4px', marginBottom: '8px', color: '#1e293b' }}>🎮 조작 방법 및 단축키 안내</div>
             <ul style={{ margin: 0, paddingLeft: '15px', listStyleType: 'disc', marginBottom: '10px' }}>
               <li><strong>포켓몬 검색:</strong> 이름 입력 후 <code>방향키 위아래</code>로 커서 이동, <code>Enter</code> 키로 추가 가능합니다. (띄어쓰기/대소문자 완전 무시)</li>
-              {/* 💡 [수정] 요청하신 검색창에 delete 키 안내 문구 명확하게 추가 */}
               <li><strong>포켓몬 삭제:</strong> 검색창이 비어있을 때 <code>Delete</code> 키를 누르면 마지막 포켓몬이 즉시 삭제됩니다.</li>
               <li><strong>빠른 검색창 전환:</strong> <code>Tab</code> 키를 누르면 내 검색창과 상대 검색창을 자유롭게 오갈 수 있습니다.</li>
               <li><strong>기술 빠른 삭제:</strong> 지정된 기술 배지 위에서 마우스 <code>우클릭</code>을 누르면 슬롯이 즉시 제거됩니다.</li>
@@ -489,11 +496,10 @@ function App() {
         )}
       </div>
 
-      {/* 💡 [수정] 대시보드 메인 레이아웃: 강제 고정 스크롤 속성(overflowY: 'auto')을 걷어내 부모 브라우저 스크롤에 편승 */}
+      {/* 대시보드 메인 레이아웃 */}
       <div style={{ display: 'flex', gap: '20px', flex: 1, minHeight: 0, flexWrap: 'wrap' }}>
         
         {/* ==================== LEFT SIDE: 엔트리 패널 ==================== */}
-        {/* 💡 [수정] flexWrap: 'wrap'을 적용해 모바일에서 내 엔트리 카드팩이 상대 카드팩 위로 이쁘게 쌓이도록 처리 */}
         <div style={{ flex: '1 1 450px', display: 'flex', gap: '12px', minHeight: '400px', flexWrap: 'wrap' }}>
           
           {/* 내 엔트리 패널 */}
@@ -615,9 +621,14 @@ function App() {
               양쪽 엔트리에 포켓몬을 등록하면 상성 리포트 격자가 실시간 연산됩니다.
             </div>
           ) : (
+           /* 💡 최소 2열(2x3 격자) 배치를 탄탄하게 유지하도록 임계점 수정 */
             <div style={{ 
               display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', 
+              gridTemplateColumns: windowWidth > 1150 
+                ? 'repeat(2, minmax(0, 1fr))'  // 1. 아주 넓은 화면에서는 시원하게 3열 고정!
+                : windowWidth > 576 
+                  ? 'repeat(2, minmax(0, 1fr))' // 2. 일반 해상도(100%) 및 태블릿에서는 최소 2열(2x3) 굳건히 유지!
+                  : 'repeat(1, minmax(0, 1fr))',// 3. 아주 좁은 스마트폰 세로 화면에서만 1열로 전환
               gap: '10px', 
               alignContent: 'start'
             }}>
