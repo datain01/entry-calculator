@@ -214,7 +214,6 @@ function App() {
   const [focusedVsIndex, setFocusedVsIndex] = useState(-1);
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // 기술 추가 자동 팝업 타겟 상태 관리
   const [openMoveSlot, setOpenMoveSlot] = useState(null);
 
   const myInputRef = useRef(null);
@@ -235,7 +234,6 @@ function App() {
     }
   };
 
-  // 💡 [수정] 대소문자 무시 + 모든 띄어쓰기 공백을 강제로 없앤 뒤 포함 여부 연산
   const filteredMyList = searchMy 
     ? pokemonData.filter(p => p.name.toLowerCase().replace(/\s+/g, '').includes(searchMy.toLowerCase().replace(/\s+/g, ''))).slice(0, 5) 
     : [];
@@ -383,7 +381,6 @@ function App() {
 
   const recommendedList = getRecommendations();
 
-  // 💡 [수정] 오직 직관적인 빨강(#ef4444)과 파랑(#2563eb)만 사용하여 대소 비교 강조 적용
   const renderStats = (stats) => {
     if (!stats) return null;
     const isPhysicalAtk = stats.attack >= stats.spAtk;
@@ -411,7 +408,8 @@ function App() {
   };
 
   return (
-    <div style={{ padding: '10px 20px', fontFamily: 'sans-serif', minHeight: '100vh', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', maxWidth: '100%', width: '100%' }}>
+    /* 💡 [수정] 최상위 컨테이너: overflowY를 visible로 열어 제한 없는 브라우저 스크롤 작동 보장 */
+    <div style={{ padding: '10px 20px', fontFamily: 'sans-serif', minHeight: '100vh', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', maxWidth: '100%', width: '100%', overflowY: 'visible' }}>
       
       {/* 상단 헤더 영역 */}
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', margin: '0 0 10px 0', flexWrap: 'wrap', gap: '10px' }}>
@@ -475,8 +473,9 @@ function App() {
             <div style={{ fontWeight: 'bold', borderBottom: '1px solid #e2e8f0', paddingBottom: '4px', marginBottom: '8px', color: '#1e293b' }}>🎮 조작 방법 및 단축키 안내</div>
             <ul style={{ margin: 0, paddingLeft: '15px', listStyleType: 'disc', marginBottom: '10px' }}>
               <li><strong>포켓몬 검색:</strong> 이름 입력 후 <code>방향키 위아래</code>로 커서 이동, <code>Enter</code> 키로 추가 가능합니다. (띄어쓰기/대소문자 완전 무시)</li>
+              {/* 💡 [수정] 요청하신 검색창에 delete 키 안내 문구 명확하게 추가 */}
+              <li><strong>포켓몬 삭제:</strong> 검색창이 비어있을 때 <code>Delete</code> 키를 누르면 마지막 포켓몬이 즉시 삭제됩니다.</li>
               <li><strong>빠른 검색창 전환:</strong> <code>Tab</code> 키를 누르면 내 검색창과 상대 검색창을 자유롭게 오갈 수 있습니다.</li>
-              <li><strong>엔트리 삭제:</strong> 검색창이 비어있을 때 <code>Delete</code> 키를 누르면 마지막 포켓몬이 즉시 삭제됩니다.</li>
               <li><strong>기술 빠른 삭제:</strong> 지정된 기술 배지 위에서 마우스 <code>우클릭</code>을 누르면 슬롯이 즉시 제거됩니다.</li>
               <li><strong>💾 실시간 자동 저장:</strong> 모든 데이터는 브라우저 캐시에 백업되어 새로고침 후에도 유지됩니다.</li>
             </ul>
@@ -490,20 +489,20 @@ function App() {
         )}
       </div>
 
-      {/* 💡 [수정] 대시보드 메인 레이아웃: PC에선 가로 배치, 창이 좁아지거나 모바일에선 flexWrap에 의해 세로로 자동 정렬 */}
-      <div style={{ display: 'flex', gap: '20px', flex: 1, overflowY: 'auto', minHeight: 0, flexWrap: 'wrap' }}>
+      {/* 💡 [수정] 대시보드 메인 레이아웃: 강제 고정 스크롤 속성(overflowY: 'auto')을 걷어내 부모 브라우저 스크롤에 편승 */}
+      <div style={{ display: 'flex', gap: '20px', flex: 1, minHeight: 0, flexWrap: 'wrap' }}>
         
         {/* ==================== LEFT SIDE: 엔트리 패널 ==================== */}
-        {/* 💡 [수정] 공간 부족 시 100% 너비로 확장되도록 flex 단위를 유연하게 수정 */}
-        <div style={{ flex: '1 1 450px', display: 'flex', gap: '12px', minHeight: '400px' }}>
+        {/* 💡 [수정] flexWrap: 'wrap'을 적용해 모바일에서 내 엔트리 카드팩이 상대 카드팩 위로 이쁘게 쌓이도록 처리 */}
+        <div style={{ flex: '1 1 450px', display: 'flex', gap: '12px', minHeight: '400px', flexWrap: 'wrap' }}>
           
           {/* 내 엔트리 패널 */}
-          <div style={{ flex: 1, border: '1px solid #ddd', padding: '12px', borderRadius: '8px', background: '#f8fafc', position: 'relative', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          <div style={{ flex: '1 1 210px', border: '1px solid #ddd', padding: '12px', borderRadius: '8px', background: '#f8fafc', position: 'relative', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             <h4 style={{ margin: '0 0 8px 0' }}>🔵 내 엔트리 ({myEntry.length}/6)</h4>
             <input 
               ref={myInputRef}
               type="text" 
-              placeholder="내 포켓몬 검색... delete로 마지막 포켓몬 삭제" 
+              placeholder="내 포켓몬 검색... (공백 비었을 때 Delete로 삭제)" 
               value={searchMy}
               onChange={(e) => { setSearchMy(e.target.value); setFocusedMyIndex(-1); }}
               onKeyDown={handleMyKeyDown}
@@ -531,7 +530,6 @@ function App() {
                   {renderStats(p.stats)}
                   {renderAbilities(p.abilities)}
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', alignItems: 'center' }}>
-                    {/* 💡 [수정] 기술 타입 배지 라벨 추가 */}
                     <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#475569', marginRight: '2px' }}>사용 기술 타입:</span>
                     {p.moveTypes.map((moveType, mIdx) => (
                       <MoveSelectDropdown 
@@ -553,12 +551,12 @@ function App() {
           </div>
 
           {/* 상대 엔트리 패널 */}
-          <div style={{ flex: 1, border: '1px solid #ddd', padding: '12px', borderRadius: '8px', background: '#fff5f5', position: 'relative', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          <div style={{ flex: '1 1 210px', border: '1px solid #ddd', padding: '12px', borderRadius: '8px', background: '#fff5f5', position: 'relative', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             <h4 style={{ margin: '0 0 8px 0' }}>🔴 상대 엔트리 ({vsEntry.length}/6)</h4>
             <input 
               ref={vsInputRef}
               type="text" 
-              placeholder="상대 포켓몬 검색... delete로 마지막 포켓몬 삭제" 
+              placeholder="상대 포켓몬 검색... (공백 비었을 때 Delete로 삭제)" 
               value={searchVs}
               onChange={(e) => { setSearchVs(e.target.value); setFocusedVsIndex(-1); }}
               onKeyDown={handleVsKeyDown}
@@ -586,7 +584,6 @@ function App() {
                   {renderStats(p.stats)}
                   {renderAbilities(p.abilities)}
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', alignItems: 'center' }}>
-                    {/* 💡 [수정] 기술 타입 배지 라벨 추가 */}
                     <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#475569', marginRight: '2px' }}>사용 기술 타입:</span>
                     {p.moveTypes.map((moveType, mIdx) => (
                       <MoveSelectDropdown 
@@ -610,7 +607,6 @@ function App() {
         </div>
 
         {/* ==================== RIGHT SIDE: 분석 리포트 패널 ==================== */}
-        {/* 💡 [수정] 공간 부족 시 하단으로 떨어지면서 유연하게 너비가 확장되도록 설정 */}
         <div style={{ flex: '1 1 450px', border: '1px solid #e2e8f0', padding: '15px', borderRadius: '8px', background: '#f8fafc', display: 'flex', flexDirection: 'column' }}>
           <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>배틀 선출 순위 및 종합 대시보드</h3>
           
@@ -621,7 +617,7 @@ function App() {
           ) : (
             <div style={{ 
               display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', // 💡 화면 크기에 따라 열 개수가 조절되도록 수정
+              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', 
               gap: '10px', 
               alignContent: 'start'
             }}>
