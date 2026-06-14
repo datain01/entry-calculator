@@ -94,7 +94,7 @@ function PokemonTypeBadge({ types }) {
   );
 }
 
-// 검색형 기술 드롭다운 컴포넌트 (자동 오픈 감지 추가)
+// 검색형 기술 드롭다운 컴포넌트
 function MoveSelectDropdown({ value, onChange, onRemove, isOpenInitially = false }) {
   const [isOpen, setIsOpen] = useState(isOpenInitially);
   const [search, setSearch] = useState('');
@@ -103,7 +103,6 @@ function MoveSelectDropdown({ value, onChange, onRemove, isOpenInitially = false
 
   const filteredTypes = ALL_TYPES.filter(t => t.includes(search));
 
-  // isOpenInitially 값이 외부에서 true로 바뀌면 동기화하여 열어줌
   useEffect(() => {
     if (isOpenInitially) {
       setIsOpen(true);
@@ -215,7 +214,7 @@ function App() {
   const [focusedVsIndex, setFocusedVsIndex] = useState(-1);
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // 새로 추가된 기술 슬롯 자동 편집 타겟 상태 관리 ({ formId, index } 구조)
+  // 기술 추가 자동 팝업 타겟 상태 관리
   const [openMoveSlot, setOpenMoveSlot] = useState(null);
 
   const myInputRef = useRef(null);
@@ -236,6 +235,7 @@ function App() {
     }
   };
 
+  // 💡 [수정] 대소문자 무시 + 모든 띄어쓰기 공백을 강제로 없앤 뒤 포함 여부 연산
   const filteredMyList = searchMy 
     ? pokemonData.filter(p => p.name.toLowerCase().replace(/\s+/g, '').includes(searchMy.toLowerCase().replace(/\s+/g, ''))).slice(0, 5) 
     : [];
@@ -283,7 +283,6 @@ function App() {
     }));
   };
 
-  // 기술 추가 로직 완료 후 바로 타겟 인덱스를 기억하도록 지정
   const addMyMoveSlot = (formId) => {
     setMyEntry(myEntry.map(p => {
       if (p.formId !== formId) return p;
@@ -384,19 +383,17 @@ function App() {
 
   const recommendedList = getRecommendations();
 
-const renderStats = (stats) => {
+  // 💡 [수정] 오직 직관적인 빨강(#ef4444)과 파랑(#2563eb)만 사용하여 대소 비교 강조 적용
+  const renderStats = (stats) => {
     if (!stats) return null;
-    // 어느 쪽 종족값이 더 높은지 비교 조건문
     const isPhysicalAtk = stats.attack >= stats.spAtk;
     const isPhysicalDef = stats.defense >= stats.spDef;
 
     return (
       <div style={{ fontSize: '11px', color: '#475569', marginBottom: '2px', display: 'flex', gap: '5px', flexWrap: 'nowrap', whiteSpace: 'nowrap' }}>
         <span>H: {stats.hp}</span> | 
-        {/* 공격/특공 중 높은 쪽에만 빨간색(#ef4444)과 볼드 적용 */}
         <span style={{ color: isPhysicalAtk ? '#ef4444' : '#475569', fontWeight: isPhysicalAtk ? 'bold' : 'normal' }}>A: {stats.attack}</span> | 
         <span style={{ color: !isPhysicalAtk ? '#ef4444' : '#475569', fontWeight: !isPhysicalAtk ? 'bold' : 'normal' }}>C: {stats.spAtk}</span> | 
-        {/* 방어/특방 중 높은 쪽에만 파란색(#2563eb)과 볼드 적용 */}
         <span style={{ color: isPhysicalDef ? '#2563eb' : '#475569', fontWeight: isPhysicalDef ? 'bold' : 'normal' }}>B: {stats.defense}</span> | 
         <span style={{ color: !isPhysicalDef ? '#2563eb' : '#475569', fontWeight: !isPhysicalDef ? 'bold' : 'normal' }}>D: {stats.spDef}</span> | 
         <span>S: {stats.speed}</span>
@@ -414,93 +411,91 @@ const renderStats = (stats) => {
   };
 
   return (
-    <div style={{ padding: '10px 20px', fontFamily: 'sans-serif', height: '100vh', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', overflow: 'hidden', maxWidth: '100%', width: '100%' }}>
+    <div style={{ padding: '10px 20px', fontFamily: 'sans-serif', minHeight: '100vh', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', maxWidth: '100%', width: '100%' }}>
       
       {/* 상단 헤더 영역 */}
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', margin: '0 0 10px 0' }}>
-        <h2 style={{ margin: 0, fontSize: '22px' }}>엔트리 추천 계산기</h2>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', margin: '0 0 10px 0', flexWrap: 'wrap', gap: '10px' }}>
+        <h2 style={{ margin: 0, fontSize: '22px', textAlign: 'center' }}>🎯 포켓몬 배틀 상성 추천 계산기</h2>
         
-        <button 
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
-          style={{
-            marginLeft: '15px',
-            padding: '4px 10px',
-            fontSize: '12px',
-            fontWeight: 'bold',
-            borderRadius: '4px',
-            border: '1px solid #cbd5e1',
-            background: '#fff',
-            cursor: 'help',
-            color: '#475569',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
-          }}
-        >
-          💡 사용법 확인
-        </button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button 
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+            style={{
+              padding: '4px 10px',
+              fontSize: '12px',
+              fontWeight: 'bold',
+              borderRadius: '4px',
+              border: '1px solid #cbd5e1',
+              background: '#fff',
+              cursor: 'help',
+              color: '#475569',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+            }}
+          >
+            💡 사용법 확인
+          </button>
 
-        <button 
-          onClick={clearAllEntries}
-          style={{
-            marginLeft: '10px',
-            padding: '4px 10px',
-            fontSize: '12px',
-            fontWeight: 'bold',
-            borderRadius: '4px',
-            border: '1px solid #fecdd3',
-            background: '#fff1f2',
-            cursor: 'pointer',
-            color: '#e11d48',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
-          }}
-        >
-          🧹 엔트리 전체 비우기
-        </button>
+          <button 
+            onClick={clearAllEntries}
+            style={{
+              padding: '4px 10px',
+              fontSize: '12px',
+              fontWeight: 'bold',
+              borderRadius: '4px',
+              border: '1px solid #fecdd3',
+              background: '#fff1f2',
+              cursor: 'pointer',
+              color: '#e11d48',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+            }}
+          >
+            🧹 엔트리 전체 비우기
+          </button>
+        </div>
 
         {showTooltip && (
           <div style={{
             position: 'absolute',
             top: '35px',
-            left: 'calc(50% + 100px)',
+            left: '50%',
+            transform: 'translateX(-50%)',
             zIndex: 200,
-            width: '430px',
+            width: 'calc(100% - 40px)',
+            maxWidth: '430px',
             background: '#fff',
             border: '1px solid #cbd5e1',
             borderRadius: '6px',
             padding: '12px 15px',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
             fontSize: '12px',
             lineHeight: '1.6',
             color: '#334155'
           }}>
             <div style={{ fontWeight: 'bold', borderBottom: '1px solid #e2e8f0', paddingBottom: '4px', marginBottom: '8px', color: '#1e293b' }}>🎮 조작 방법 및 단축키 안내</div>
             <ul style={{ margin: 0, paddingLeft: '15px', listStyleType: 'disc', marginBottom: '10px' }}>
-              <li><strong>포켓몬 검색:</strong> 이름 일부 입력 후 <code>방향키 위아래</code>로 커서 이동, <code>Enter</code> 키로 즉시 추가 가능합니다.</li>
+              <li><strong>포켓몬 검색:</strong> 이름 입력 후 <code>방향키 위아래</code>로 커서 이동, <code>Enter</code> 키로 추가 가능합니다. (띄어쓰기/대소문자 완전 무시)</li>
               <li><strong>빠른 검색창 전환:</strong> <code>Tab</code> 키를 누르면 내 검색창과 상대 검색창을 자유롭게 오갈 수 있습니다.</li>
-              <li><strong>엔트리 삭제:</strong> 검색창이 비어있을 때 <code>Delete</code> 키를 누르면 마지막으로 등록된 포켓몬이 즉시 삭제됩니다.</li>
-              <li><strong>스킬 빌드 세팅:</strong> 포켓몬 추가 시 본체 타입이 기본 기술로 자동 매핑되며, 최대 4개까지 원하는 커스텀 공격 기술 타입을 추가할 수 있습니다.</li>
-              <li><strong>기술 빠른 삭제:</strong> 지정된 기술 배지 위에서 마우스 <code>우클릭</code>을 누르면 드롭다운을 거치지 않고 슬롯이 즉시 제거됩니다.</li>
-              <li><strong>💾 실시간 자동 저장:</strong> 모든 세팅 데이터는 브라우저 캐시에 상시 백업되어 새로고침 후에도 유지됩니다.</li>
+              <li><strong>엔트리 삭제:</strong> 검색창이 비어있을 때 <code>Delete</code> 키를 누르면 마지막 포켓몬이 즉시 삭제됩니다.</li>
+              <li><strong>기술 빠른 삭제:</strong> 지정된 기술 배지 위에서 마우스 <code>우클릭</code>을 누르면 슬롯이 즉시 제거됩니다.</li>
+              <li><strong>💾 실시간 자동 저장:</strong> 모든 데이터는 브라우저 캐시에 백업되어 새로고침 후에도 유지됩니다.</li>
             </ul>
 
             <div style={{ fontWeight: 'bold', borderBottom: '1px solid #e2e8f0', paddingBottom: '4px', margin: '10px 0 6px 0', color: '#1e293b' }}>📊 분석 용어 정의</div>
             <ul style={{ margin: 0, paddingLeft: '15px', listStyleType: 'disc' }}>
-              <li><strong>공격기여:</strong> 내 포켓몬의 기술들이 상대 엔트리의 약점을 찌를 때 가산되는 누적 공격 상성 점수입니다. (반감 이하는 감점)</li>
+              <li><strong>공격기여:</strong> 내 포켓몬의 기술들이 상대 엔트리의 약점을 찌를 때 가산되는 누적 공격 상성 점수입니다.</li>
               <li><strong>대비안전:</strong> 상대 엔트리의 공격 기술들을 내 포켓몬이 얼마나 안전하게 받아낼 수 있는지를 계산한 방어 상성 점수입니다.</li>
-              <li><strong style={{ color: '#ea580c' }}>선공가능:</strong> 내 포켓몬의 스피드 종족값이 상대 포켓몬의 스피드 종족값보다 빠를 때 매핑됩니다.</li>
-              <li><strong style={{ color: '#ef4444' }}>공격유리:</strong> 상대 포켓몬의 방어 타입 약점(2배/4배)을 찌를 수 있는 기술 타입을 내가 보유하고 있을 때 활성화됩니다.</li>
-              <li><strong style={{ color: '#1d4ed8' }}>방어유리:</strong> 상대 포켓몬이 가진 모든 기술 타입을 내 포켓몬 본체의 타입 상성으로 안전하게 반감 이하로 완벽히 받아낼 수 있을 때 표시됩니다.</li>
-              <li><strong style={{ color: '#60a5fa' }}>방어약점:</strong> 상대 포켓몬이 채용한 공격 기술 타입 중, 내 본체의 약점을 찌르는 치명적인 스킬이 존재할 때 표시됩니다.</li>
             </ul>
           </div>
         )}
       </div>
 
-      {/* 대시보드 메인 레이아웃 */}
-      <div style={{ display: 'flex', gap: '20px', flex: 1, overflow: 'hidden', minHeight: 0 }}>
+      {/* 💡 [수정] 대시보드 메인 레이아웃: PC에선 가로 배치, 창이 좁아지거나 모바일에선 flexWrap에 의해 세로로 자동 정렬 */}
+      <div style={{ display: 'flex', gap: '20px', flex: 1, overflowY: 'auto', minHeight: 0, flexWrap: 'wrap' }}>
         
         {/* ==================== LEFT SIDE: 엔트리 패널 ==================== */}
-        <div style={{ width: '50%', display: 'flex', gap: '12px', overflow: 'hidden' }}>
+        {/* 💡 [수정] 공간 부족 시 100% 너비로 확장되도록 flex 단위를 유연하게 수정 */}
+        <div style={{ flex: '1 1 450px', display: 'flex', gap: '12px', minHeight: '400px' }}>
           
           {/* 내 엔트리 패널 */}
           <div style={{ flex: 1, border: '1px solid #ddd', padding: '12px', borderRadius: '8px', background: '#f8fafc', position: 'relative', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
@@ -508,7 +503,7 @@ const renderStats = (stats) => {
             <input 
               ref={myInputRef}
               type="text" 
-              placeholder="내 포켓몬 검색..." 
+              placeholder="내 포켓몬 검색... delete로 마지막 포켓몬 삭제" 
               value={searchMy}
               onChange={(e) => { setSearchMy(e.target.value); setFocusedMyIndex(-1); }}
               onKeyDown={handleMyKeyDown}
@@ -535,11 +530,9 @@ const renderStats = (stats) => {
                   </div>
                   {renderStats(p.stats)}
                   {renderAbilities(p.abilities)}
-                  {/* 내 엔트리 내 스킬 빌드 출력부 */}
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', alignItems: 'center' }}>
-                    {/* 💡 안내 텍스트 추가 */}
+                    {/* 💡 [수정] 기술 타입 배지 라벨 추가 */}
                     <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#475569', marginRight: '2px' }}>사용 기술 타입:</span>
-                    
                     {p.moveTypes.map((moveType, mIdx) => (
                       <MoveSelectDropdown 
                         key={mIdx} 
@@ -565,7 +558,7 @@ const renderStats = (stats) => {
             <input 
               ref={vsInputRef}
               type="text" 
-              placeholder="상대 포켓몬 검색..." 
+              placeholder="상대 포켓몬 검색... delete로 마지막 포켓몬 삭제" 
               value={searchVs}
               onChange={(e) => { setSearchVs(e.target.value); setFocusedVsIndex(-1); }}
               onKeyDown={handleVsKeyDown}
@@ -593,6 +586,8 @@ const renderStats = (stats) => {
                   {renderStats(p.stats)}
                   {renderAbilities(p.abilities)}
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', alignItems: 'center' }}>
+                    {/* 💡 [수정] 기술 타입 배지 라벨 추가 */}
+                    <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#475569', marginRight: '2px' }}>사용 기술 타입:</span>
                     {p.moveTypes.map((moveType, mIdx) => (
                       <MoveSelectDropdown 
                         key={mIdx} 
@@ -615,21 +610,19 @@ const renderStats = (stats) => {
         </div>
 
         {/* ==================== RIGHT SIDE: 분석 리포트 패널 ==================== */}
-        <div style={{ width: '50%', border: '1px solid #e2e8f0', padding: '15px', borderRadius: '8px', background: '#f8fafc', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        {/* 💡 [수정] 공간 부족 시 하단으로 떨어지면서 유연하게 너비가 확장되도록 설정 */}
+        <div style={{ flex: '1 1 450px', border: '1px solid #e2e8f0', padding: '15px', borderRadius: '8px', background: '#f8fafc', display: 'flex', flexDirection: 'column' }}>
           <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>배틀 선출 순위 및 종합 대시보드</h3>
           
           {recommendedList.length === 0 ? (
-            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', fontSize: '14px' }}>
-              양쪽 엔트리에 포켓몬을 등록하면 2x3 상성 리포트 격자가 실시간 연산됩니다.
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', fontSize: '14px', minHeight: '200px' }}>
+              양쪽 엔트리에 포켓몬을 등록하면 상성 리포트 격자가 실시간 연산됩니다.
             </div>
           ) : (
             <div style={{ 
               display: 'grid', 
-              gridTemplateColumns: 'repeat(2, 1fr)', 
-              gridTemplateRows: 'auto auto auto', 
+              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', // 💡 화면 크기에 따라 열 개수가 조절되도록 수정
               gap: '10px', 
-              flex: 1, 
-              overflowY: 'auto',
               alignContent: 'start'
             }}>
               {recommendedList.map((p, index) => (
