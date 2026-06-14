@@ -384,7 +384,7 @@ function App() {
 
   const recommendedList = getRecommendations();
 
-  const renderStats = (stats) => {
+const renderStats = (stats) => {
     if (!stats) return null;
     // 어느 쪽 종족값이 더 높은지 비교 조건문
     const isPhysicalAtk = stats.attack >= stats.spAtk;
@@ -535,7 +535,11 @@ function App() {
                   </div>
                   {renderStats(p.stats)}
                   {renderAbilities(p.abilities)}
+                  {/* 내 엔트리 내 스킬 빌드 출력부 */}
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', alignItems: 'center' }}>
+                    {/* 💡 안내 텍스트 추가 */}
+                    <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#475569', marginRight: '2px' }}>사용 기술 타입:</span>
+                    
                     {p.moveTypes.map((moveType, mIdx) => (
                       <MoveSelectDropdown 
                         key={mIdx} 
