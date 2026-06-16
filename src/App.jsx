@@ -850,7 +850,7 @@ function App() {
         width: '100%'
       }}>
         <div style={{ fontWeight: 'bold', color: '#64748b', marginBottom: '2px' }}>
-          © {new Date().getFullYear()} Pokemon Battle Entry Recommender. All Rights Reserved.
+          © {new Date().getFullYear()} Pokemon Battle Entry Calculator. All Rights Reserved.
         </div>
         <div style={{ maxWidth: '800px', margin: '0 auto', wordBreak: 'keep-all' }}>
           본 서비스는 실전 포켓몬스터 배틀을 돕기 위해 비공식적으로 제작된 웹 페이지입니다.
