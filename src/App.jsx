@@ -349,12 +349,9 @@ function App() {
     setMyEntry(myEntry.map(p => p.formId !== formId ? p : { ...p, moveTypes: p.moveTypes.map((m, i) => i === moveIndex ? newType : m) }));
   };
 
+  /* 🛠️ 버그 원인 수정 완료: filter 처리되던 무늬만 Change 함수를 map 구조로 정상 원복 */
   const handleVsMoveTypeChange = (formId, moveIndex, newType) => {
-    setVsEntry(vsEntry.map(p => {
-      if (p.formId !== formId) return p;
-      if (p.moveTypes.length <= 1) { alert("최소 1개의 기술 타입은 지정해야 합니다."); return p; }
-      return { ...p, moveTypes: p.moveTypes.filter((_, idx) => idx !== moveIndex) };
-    }));
+    setVsEntry(vsEntry.map(p => p.formId !== formId ? p : { ...p, moveTypes: p.moveTypes.map((m, i) => i === moveIndex ? newType : m) }));
   };
 
   const removeMyMoveSlot = (formId, moveIndex) => {
@@ -701,7 +698,6 @@ function App() {
                 {/* 타이틀 우측 정렬 배치 라인 */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '0 0 4px 0' }}>
                   <h3 style={{ margin: 0, fontSize: '16px' }}>🔍 포켓몬 검색</h3>
-                  {/* 💡 [기획 반영] 확실한 초록색 솔리드 테마 및 타이핑 드롭다운과 크기 맞춤 최적화 */}
                   <button
                     onClick={resetSearchFilters}
                     style={{
@@ -714,7 +710,7 @@ function App() {
                       color: '#fff',
                       cursor: 'pointer',
                       boxShadow: '0 2px 4px rgba(22, 163, 74, 0.2)',
-                      height: '24px', // 타입 인풋 창과 규격 동일화
+                      height: '24px', 
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -783,7 +779,6 @@ function App() {
 
                   {/* 정렬 기준 */}
                   <div style={{ flex: '1 1 100px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                    {/* 💡 [기획 반영] '정렬 기준' -> '정렬'로 축약 셋업 */}
                     <label style={{ fontSize: '11px', fontWeight: 'bold', color: '#475569' }}>정렬</label>
                     <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={{ padding: '3px', fontSize: '12px', borderRadius: '4px', border: '1px solid #cbd5e1', height: '24px', boxSizing: 'border-box' }}>
                       <option value="id">도감 번호순</option> 
@@ -838,7 +833,8 @@ function App() {
         </div>
 
       </div>
-      {/* 💡 [새로 추가] 최하단 푸터 저작권 및 법적 고지 영역 */}
+      
+      {/* 푸터 저작권 및 법적 고지 영역 */}
       <footer style={{
         marginTop: '30px',
         padding: '15px 10px',
