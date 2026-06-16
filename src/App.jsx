@@ -532,10 +532,12 @@ function App() {
           <div style={{ position: 'absolute', top: '35px', left: '50%', transform: 'translateX(-50%)', zIndex: 200, width: 'calc(100% - 40px)', maxWidth: '430px', background: '#fff', border: '1px solid #cbd5e1', borderRadius: '6px', padding: '12px 15px', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)', fontSize: '12px', lineHeight: '1.6', color: '#334155' }}>
             <div style={{ fontWeight: 'bold', borderBottom: '1px solid #e2e8f0', paddingBottom: '4px', marginBottom: '8px', color: '#1e293b' }}>🎮 조작 방법 및 단축키 안내</div>
             <ul style={{ margin: 0, paddingLeft: '15px', listStyleType: 'disc', marginBottom: '10px' }}>
-              <li><strong>초성 검색 지원!</strong> 검색창에 <code>ㅁㄱㅇㅅ</code>처럼 초성만 쳐도 포켓몬이 바로 매칭됩니다.</li>
+              <li><strong>초성 검색: </strong> 검색창에 <code>ㅁㄱㅇㅅ</code>처럼 초성만 쳐도 포켓몬이 바로 매칭됩니다.</li>
               <li><strong>포켓몬 검색:</strong> 이름 입력 후 <code>방향키 위아래</code> 후 <code>Enter</code> 키로 추가 가능합니다.</li>
               <li><strong>포켓몬 삭제:</strong> 검색창이 비어있을 때 <code>Delete</code> 키를 누르면 마지막 포켓몬이 삭제됩니다.</li>
-              <li><strong>기술 빠른 삭제:</strong> 기술 배지 위에서 마우스 <code>우클릭</code>을 누르면 슬롯이 즉시 제거됩니다.</li>
+              <li><strong>사용 기술 타입:</strong> 포켓몬이 사용하는 기술 타입이 별도로 있을 시 추가합니다.</li>
+              <li><strong>기술 빠른 삭제:</strong> 기술 위에서 마우스 <code>우클릭</code>을 누르면 슬롯이 즉시 제거됩니다.</li>
+              <li><strong>포켓몬 찾기:</strong> 무슨 포켓몬이더라 탭에서 타입, 설명 등으로 검색할 수 있습니다.</li>
             </ul>
           </div>
         )}
