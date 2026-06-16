@@ -836,6 +836,28 @@ function App() {
         </div>
 
       </div>
+      {/* 💡 [새로 추가] 최하단 푸터 저작권 및 법적 고지 영역 */}
+      <footer style={{
+        marginTop: '30px',
+        padding: '15px 10px',
+        borderTop: '1px solid #e2e8f0',
+        textAlign: 'center',
+        fontSize: '11px',
+        color: '#94a3b8',
+        lineHeight: '1.6',
+        letterSpacing: '-0.3px',
+        boxSizing: 'border-box',
+        width: '100%'
+      }}>
+        <div style={{ fontWeight: 'bold', color: '#64748b', marginBottom: '2px' }}>
+          © {new Date().getFullYear()} Pokemon Battle Entry Recommender. All Rights Reserved.
+        </div>
+        <div style={{ maxWidth: '800px', margin: '0 auto', wordBreak: 'keep-all' }}>
+          본 서비스는 실전 포켓몬스터 배틀을 돕기 위해 비공식적으로 제작된 웹 페이지입니다.
+          서비스에 사용된 포켓몬 명칭, 데이터, 이미지, 관련 디자인 및 저작권은 전적으로 
+          Nintendo, Creatures Inc., GAME FREAK, 및 (주)포켓몬코리아에 소유권이 있습니다.
+        </div>
+      </footer>
     </div>
   );
 }
